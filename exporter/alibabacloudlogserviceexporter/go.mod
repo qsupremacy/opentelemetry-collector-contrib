@@ -1,4 +1,4 @@
-module github.com/open-telemetry/opentelemetry-collector-contrib/exporter/alibabacloudlogserviceexporter
+module github.com/qsupremacy/opentelemetry-collector-contrib/exporter/alibabacloudlogserviceexporter
 
 go 1.22.0
 

@@ -56,6 +56,7 @@ body:
       - exporter/googlecloudpubsub
       - exporter/googlemanagedprometheus
       - exporter/honeycombmarker
+      - exporter/huaweicloudaom
       - exporter/influxdb
       - exporter/kafka
       - exporter/kinetica

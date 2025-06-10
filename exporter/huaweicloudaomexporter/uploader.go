@@ -18,7 +18,7 @@ import (
 // logServiceClient log Service's client wrapper
 type logServiceClient interface {
 	// sendLogs send message to LogService
-	sendLogs(logs []*producer.Log) error
+	sendLogs(logs *producer.StructLogs) error
 }
 
 type serviceClientImpl struct {
@@ -101,13 +101,11 @@ func newLogServiceClient(config *Config, logger *zap.Logger) (logServiceClient, 
 }
 
 // sendLogs send message to LogService
-func (c *serviceClientImpl) sendLogs(logs []*producer.Log) error {
+func (c *serviceClientImpl) sendLogs(slogs *producer.StructLogs) error {
 	// proxy mod
 	if c.proxyInstance != nil {
-		lg := &producer.LogGroup{
-			Logs: logs,
-		}
-		err := c.proxyInstance.PutLogs(c.groupId, c.streamId, lg)
+		//fmt.Println("xxxx",c.groupId , "#",c.streamId, "#", producer.LogTypeStruct)
+		err := c.proxyInstance.PutLogs(c.groupId, c.streamId, slogs, producer.LogTypeStruct)
 		if err != nil {
 			c.Fail(&producer.Result{})
 		} else {
@@ -116,8 +114,8 @@ func (c *serviceClientImpl) sendLogs(logs []*producer.Log) error {
 		return err
 	}
 	// no proxy
-	for _, log := range logs {
-		err := c.clientInstance.SendLogWithCallBack(c.groupId, c.streamId, log, c)
+	for _, slog := range slogs.Logs {
+		err := c.clientInstance.SendLogStructWithCallBack(c.groupId, c.streamId, slog, c)
 		if err != nil {
 			c.logger.Warn("send log fail", zap.Error(err))
 			return err

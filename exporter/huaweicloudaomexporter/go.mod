@@ -6,10 +6,11 @@ toolchain go1.23.2
 
 require (
 	github.com/gogo/protobuf v1.3.2
-	github.com/huaweicloud/huaweicloud-lts-sdk-go v0.0.0-20230808120118-1be1a587e286
+	github.com/huaweicloud/huaweicloud-lts-sdk-go v0.0.0-20250527071047-e5de19cfe5aa
 	github.com/open-telemetry/opentelemetry-collector-contrib/internal/coreinternal v0.119.0
 	github.com/stretchr/testify v1.10.0
 	go.opentelemetry.io/collector/component v0.119.1-0.20250210123122-44b3eeda354c
+	go.opentelemetry.io/collector/component/componenttest v0.119.1-0.20250210123122-44b3eeda354c
 	go.opentelemetry.io/collector/config/configopaque v1.25.0
 	go.opentelemetry.io/collector/confmap v1.25.0
 	go.opentelemetry.io/collector/exporter v0.119.0
@@ -38,8 +39,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/sirupsen/logrus v1.9.3 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
-	go.opentelemetry.io/collector/component/componenttest v0.119.1-0.20250210123122-44b3eeda354c // indirect
 	go.opentelemetry.io/collector/config/configretry v1.25.0 // indirect
 	go.opentelemetry.io/collector/consumer v1.25.1-0.20250210123122-44b3eeda354c // indirect
 	go.opentelemetry.io/collector/consumer/consumererror v0.119.1-0.20250210123122-44b3eeda354c // indirect
@@ -68,6 +69,7 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a // indirect
 	google.golang.org/grpc v1.70.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 

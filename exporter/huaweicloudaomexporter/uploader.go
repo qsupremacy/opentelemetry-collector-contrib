@@ -6,13 +6,12 @@ package huaweicloudaomexporter // import "github.com/open-telemetry/opentelemetr
 import (
 	"crypto/tls"
 	"errors"
+	"github.com/huaweicloud/huaweicloud-lts-sdk-go/producer"
+	"go.uber.org/zap"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
-
-	"github.com/huaweicloud/huaweicloud-lts-sdk-go/producer"
-	"go.uber.org/zap"
 )
 
 // logServiceClient log Service's client wrapper
@@ -84,6 +83,7 @@ func newLogServiceClient(config *Config, logger *zap.Logger) (logServiceClient, 
 				},
 			}
 		}
+
 	} else {
 		c.clientInstance = producer.InitProducer(producerConfig)
 		c.clientInstance.Start()
@@ -104,7 +104,6 @@ func newLogServiceClient(config *Config, logger *zap.Logger) (logServiceClient, 
 func (c *serviceClientImpl) sendLogs(slogs *producer.StructLogs) error {
 	// proxy mod
 	if c.proxyInstance != nil {
-		//fmt.Println("xxxx",c.groupId , "#",c.streamId, "#", producer.LogTypeStruct)
 		err := c.proxyInstance.PutLogs(c.groupId, c.streamId, slogs, producer.LogTypeStruct)
 		if err != nil {
 			c.Fail(&producer.Result{})
@@ -115,11 +114,13 @@ func (c *serviceClientImpl) sendLogs(slogs *producer.StructLogs) error {
 	}
 	// no proxy
 	for _, slog := range slogs.Logs {
-		err := c.clientInstance.SendLogStructWithCallBack(c.groupId, c.streamId, slog, c)
+		//err := c.clientInstance.SendLogStructWithCallBack(c.groupId, c.streamId, slog, c)
+		err := c.clientInstance.SendLogStruct(c.groupId, c.streamId, slog)
 		if err != nil {
 			c.logger.Warn("send log fail", zap.Error(err))
 			return err
 		}
+		_ = slog
 	}
 	return nil
 }

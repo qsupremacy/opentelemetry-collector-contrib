@@ -5,7 +5,6 @@ package huaweicloudaomexporter // import "github.com/open-telemetry/opentelemetr
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/huaweicloud/huaweicloud-lts-sdk-go/producer"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/exporter"
@@ -42,30 +41,36 @@ func (s *logServiceLogsSender) pushLogsData(_ context.Context, md plog.Logs) err
 	var err error
 	ltsLogs := logDataToLogService(md)
 	logs := change2CommonLogs(ltsLogs)
-	if len(logs) > 0 {
+	if len(logs.Logs) > 0 {
 		err = s.client.sendLogs(logs)
 	}
 	return err
 }
 
-func change2CommonLogs(list []*ExtendLog) []*producer.Log {
-	logs := make([]*producer.Log, len(list))
+func change2CommonLogs(list []*ExtendLog) *producer.StructLogs {
+	sLogs := &producer.StructLogs{}
+	logs := make([]*producer.StructLog, len(list))
 
 	for i := 0; i < len(list); i++ {
-		logs[i] = &list[i].Log
+		logs[i] = &producer.StructLog{}
 		var cache = map[string]string{}
 		for _, tag := range list[i].Extends {
 			cache[*tag.Key] = *tag.Value
 		}
-		data, _ := json.Marshal(cache)
-		logs[i].Contents = []*producer.LogContent{
-			{
-				LogTimeNs: time.Now().UnixNano(),
-				Log:       string(data),
-			},
-		}
+		logs[i].Contents = make([]map[string]string, 1)
+		logs[i].Contents[0] = cache
+		logs[i].Time = time.Now().UnixMilli()
+		logs[i].LineNum = time.Now().UnixNano()
 
-		logs[i].Labels = "{}"
+		// data, _ := json.Marshal(cache)
+		//	  = []*producer.LogContent{
+		//	{
+		//		LogTimeNs: time.Now().UnixNano(),
+		//		Log:       string(data),
+		//	},
+		//}
+		// logs[i].Labels = "{}"
 	}
-	return logs
+	sLogs.Logs = logs
+	return sLogs
 }
